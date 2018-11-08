@@ -176,12 +176,14 @@ __asm__("cmpl %%ecx,current\n\t" \
 	"je 1f\n\t" \
 	"movw %%dx,%1\n\t" \
 	"xchgl %%ecx,current\n\t" \
+	// note: ljmp 之前是进程0的0特权（内核态）， 之后：进程1的
 	"ljmp *%0\n\t" \
 	"cmpl %%ecx,last_task_used_math\n\t" \
 	"jne 1f\n\t" \
 	"clts\n" \
 	"1:" \
 	::"m" (*&__tmp.a),"m" (*&__tmp.b), \
+	// note: TSS
 	"d" (_TSS(n)),"c" ((long) task[n])); \
 }
 

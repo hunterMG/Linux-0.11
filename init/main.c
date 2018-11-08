@@ -140,6 +140,7 @@ void main(void)		/* This really IS void, no error here. */
 	move_to_user_mode();
 	if (!fork()) {		/* we count on this going ok */
 		init();
+		//note: 从此进入进程1的3特权级
 	}
 /*
  *   NOTE!!   For any other task 'pause()' would mean we have to get a

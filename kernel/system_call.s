@@ -94,11 +94,13 @@ system_call:
 	call *sys_call_table(,%eax,4)
 	pushl %eax
 	movl current,%eax
+	// note: 0 is TASK_RUNNING
 	cmpl $0,state(%eax)		# state
 	jne reschedule
 	cmpl $0,counter(%eax)		# counter
 	je reschedule
 ret_from_sys_call:
+	// note: check if current is task[0]
 	movl current,%eax		# task[0] cannot have signals
 	cmpl task,%eax
 	je 3f

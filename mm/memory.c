@@ -170,11 +170,13 @@ int copy_page_tables(unsigned long from,unsigned long to,long size)
 			return -1;	/* Out of memory, see freeing */
 		*to_dir = ((unsigned long) to_page_table) | 7;
 		nr = (from==0)?0xA0:1024;
+		// note: 指针的加是加一个类型
 		for ( ; nr-- > 0 ; from_page_table++,to_page_table++) {
 			this_page = *from_page_table;
 			if (!(1 & this_page))
 				continue;
 			this_page &= ~2;
+			// note: 不直接改 to_page_table, 而是用 this_page，防止改掉__
 			*to_page_table = this_page;
 			if (this_page > LOW_MEM) {
 				*from_page_table = this_page;
@@ -184,7 +186,7 @@ int copy_page_tables(unsigned long from,unsigned long to,long size)
 			}
 		}
 	}
-	invalidate();
+	invalidate();// note: 刷TLB（体系结构中）， 重置CR3
 	return 0;
 }
 

@@ -121,6 +121,7 @@ void schedule(void)
 
 /* this is the scheduler proper: */
 
+	// note：进程0的内核态
 	while (1) {
 		c = -1;
 		next = 0;
@@ -143,6 +144,7 @@ void schedule(void)
 
 int sys_pause(void)
 {
+	// note: TASK_INTERRUPTIBLE 和 TASK_UNINTERRUPTIBLE 都是挂起状态，但是唤醒条件有强弱之分
 	current->state = TASK_INTERRUPTIBLE;
 	schedule();
 	return 0;
